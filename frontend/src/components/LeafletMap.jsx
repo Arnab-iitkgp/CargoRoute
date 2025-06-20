@@ -40,7 +40,7 @@ function LocationClicker({ onMapClick }) {
 }
 function TruckMarker({ path, delay = 0, onFinish }) {
   const [position, setPosition] = useState(null);
-    delay=Math.min(delay, 1000)  // never more than 1 second
+  delay = Math.min(delay, 1000); // never more than 1 second
   useEffect(() => {
     if (!path || path.length < 2) return;
 
@@ -55,7 +55,7 @@ function TruckMarker({ path, delay = 0, onFinish }) {
         return;
       }
       setPosition(path[i]);
-    }, 100+delay); // optional delay scaling
+    }, 100 + delay); // optional delay scaling
 
     return () => clearInterval(interval);
   }, [path]);
@@ -89,10 +89,28 @@ export default function LeafletMap({
   const [deliveryStarted, setDeliveryStarted] = useState(false);
   const [deliveryDone, setDeliveryDone] = useState(false);
   const [trucksCompleted, setTrucksCompleted] = useState(0);
-const routeColors = [
-  "red", "blue", "green", "purple", "orange", "teal", "pink", "indigo", "yellow", "cyan",
-  "lime", "rose", "amber", "violet", "fuchsia", "emerald", "sky", "gray", "stone", "slate"
-];
+  const routeColors = [
+    "red",
+    "blue",
+    "green",
+    "purple",
+    "orange",
+    "teal",
+    "pink",
+    "indigo",
+    "yellow",
+    "cyan",
+    "lime",
+    "rose",
+    "amber",
+    "violet",
+    "fuchsia",
+    "emerald",
+    "sky",
+    "gray",
+    "stone",
+    "slate",
+  ];
   const [useCarto, setUseCarto] = useState(false);
 
   const handleDemandChange = (index, value) => {
@@ -115,7 +133,7 @@ const routeColors = [
     if (deliveryStarted && trucksCompleted === routePolylines.length) {
       setDeliveryStarted(false);
       setDeliveryDone(true);
-      alert("Delivery Completed.")
+      alert("Delivery Completed.");
       setTrucksCompleted(0); // reset for next run
     }
   }, [trucksCompleted, deliveryStarted, routePolylines.length]);
@@ -130,7 +148,7 @@ const routeColors = [
     newDemands[index] = parseInt(value) || 0;
     setDemands(newDemands);
   };
-  
+
   // Fetch road-following routes from OpenRouteService
   useEffect(() => {
     const fetchORSRoutes = async () => {
@@ -145,18 +163,12 @@ const routeColors = [
 
         try {
           const res = await axios.post(
-            "https://api.openrouteservice.org/v2/directions/driving-car/geojson",
+            `${import.meta.env.VITE_API_URL}/api/directions`,
             {
-              coordinates: coords.map(([lat, lng]) => [lng, lat]), // ORS expects [lng, lat]
-            },
-            {
-              headers: {
-                Authorization: ORS_API_KEY,
-                "Content-Type": "application/json",
-              },
+              coordinates: coords.map(([lat, lng]) => [lng, lat]), // still in ORS format
             }
           );
-
+          
           const geometry = res.data.features[0].geometry.coordinates.map(
             ([lng, lat]) => [lat, lng]
           );
@@ -290,7 +302,7 @@ const routeColors = [
               <TruckMarker
                 key={i}
                 path={path}
-                delay={(i * 100)}
+                delay={i * 100}
                 onFinish={handleTruckDone}
               />
             ))}
