@@ -3,8 +3,12 @@
 
 A logistics optimization tool that solves the Vehicle Routing Problem (VRP) using a custom Genetic Algorithm. Visualizes real-world delivery routes on interactive maps with capacity constraints, powered by OpenRouteService and Leaflet.
 
+⚠️ Heads up: The site may take 1–2 minutes to load the first time you open it. This happens because the Render server needs time to wake up. Thanks for your patience!
 ---
+## 🚀 Demo  video 
+[![View Demo](https://img.shields.io/badge/Click%20Here-blue?style=for-the-badge)](https://drive.google.com/file/d/1ePBCRtL66dYHFezaCkA8pritkN0_Mkm7/view?usp=drive_link)
 
+---
 ##  Features
 
 1. **Genetic Algorithm–based VRP Solver**
@@ -44,8 +48,9 @@ A logistics optimization tool that solves the Vehicle Routing Problem (VRP) usin
 
 ![Screenshot (267)](https://github.com/user-attachments/assets/a9d7fb90-ab7e-4402-a964-906031d99af3)
 
-
 ---
+
+
 
 ##  Setup Instructions
 
@@ -119,3 +124,4 @@ npm run dev
 Built with 💗 by Arnab Chakraborty
 
 ---
+
