@@ -1,4 +1,4 @@
-const { solveVRP } = require("../services/vrpSolver");
+const solveVRP  = require("../services/vrpSolver");
 const DeliveryJob = require("../models/DeliveryJob");
 
 const solveVRPHandler = async (req, res) => {

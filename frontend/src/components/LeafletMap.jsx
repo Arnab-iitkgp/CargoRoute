@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,useRef} from "react";
 import {
   MapContainer,
   TileLayer,
@@ -84,7 +84,6 @@ export default function LeafletMap({
   job,
 }) {
   const [routePolylines, setRoutePolylines] = useState([]);
-  const ORS_API_KEY = import.meta.env.VITE_ORS_API_KEY;
 
   const [deliveryStarted, setDeliveryStarted] = useState(false);
   const [deliveryDone, setDeliveryDone] = useState(false);
@@ -112,6 +111,41 @@ export default function LeafletMap({
     "slate",
   ];
   const [useCarto, setUseCarto] = useState(false);
+  const [coords,setCoords]=useState(null);
+  //location fetch
+    useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
+          console.log("User location:", latitude, longitude);
+          setCoords([latitude, longitude]);
+        },
+        (err) => {
+          console.error("Location access denied or unavailable:", err.message);
+        },
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+      );
+    } else {
+      console.error("Geolocation not supported by this browser.");
+    }
+  }, []);
+
+
+  const hasCenteredRef = useRef(false); // <— persists across renders, never resets
+function SetInitialView({ coords }) {
+  const map = useMapEvents({});
+
+  useEffect(() => {
+    if (coords && !hasCenteredRef.current) {
+      map.flyTo(coords,14); // or map.setView(coords, 13)
+      hasCenteredRef.current = true; // mark as done forever
+    }
+  }, [coords,hasCenteredRef]);
+
+  return null;
+}
+
 
   const handleDemandChange = (index, value) => {
     const newDemand = parseInt(value) || 0;
@@ -151,6 +185,12 @@ export default function LeafletMap({
 
   // Fetch road-following routes from OpenRouteService
   useEffect(() => {
+    if(locations.length===0){
+      setRoutePolylines([]);
+      // setTrucksCompleted(0);
+      setDeliveryStarted(false);
+      return;
+    } 
     const fetchORSRoutes = async () => {
       if (!job?.result?.bestRoute || locations.length === 0) return;
       const allRoutes = [];
@@ -165,7 +205,7 @@ export default function LeafletMap({
           const res = await axios.post(
             `${import.meta.env.VITE_API_URL}/api/directions`,
             {
-              coordinates: coords.map(([lat, lng]) => [lng, lat]), // still in ORS format
+              coordinates: coords.map(([lat, lng]) => [lng, lat]),
             }
           );
           
@@ -253,7 +293,7 @@ export default function LeafletMap({
       {/* Map */}
       <main className="flex-1 relative">
         <MapContainer
-          center={[22.5726, 88.3639]} // Kolkata default center
+          center={coords || [22.5726, 88.3639]} // Kolkata default center
           zoom={13}
           className="h-full w-full"
         >
@@ -290,7 +330,7 @@ export default function LeafletMap({
           ))}
 
           {/* Real-road Polyline paths */}
-          {routePolylines.map((polyline, i) => (
+          { routePolylines.map((polyline, i) => (
             <Polyline
               key={i}
               positions={polyline}
@@ -306,6 +346,8 @@ export default function LeafletMap({
                 onFinish={handleTruckDone}
               />
             ))}
+           {coords && <SetInitialView coords={coords} />}
+
         </MapContainer>
       </main>
     </div>

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { createJob } from "./services/api";
+import Footer from "./components/Footer";
 import MapView from "./components/LeafletMap";
-import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa"; // icons for footer
+import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa"; // icons for div
 
 export default function App() {
   const [job, setJob] = useState(null);
@@ -23,7 +24,7 @@ const routeColors = [
     const payload = {
       locations,
       demands,
-      vehicleCapacity:vehicleCapacity,
+      vehicleCapacity,
       numVehicles: 1,
     };
 
@@ -37,6 +38,20 @@ const routeColors = [
       setLoading(false);
     }
   };
+
+  const resetNodes = ()=>{
+    if(locations.length===0){
+      alert("No locations to reset.");
+      return;
+    }
+    if(window.confirm("Are you sure you want to reset all locations?")){
+      setLocations([]);
+      setDemands([]);
+      setJob(null);
+      setVehicleCapacity(8); //default
+    }
+    return
+  }
   
 
   return (
@@ -48,7 +63,7 @@ const routeColors = [
             Cargo<span className="text-gray-800">Route</span>
           </h1>
           <p className="text-xs text-gray-500 text-center mb-6">
-            Optimizing Every Mile.
+            Optimizing Every Mile
           </p>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -62,7 +77,6 @@ const routeColors = [
                 setVehicleCapacity(parseInt(e.target.value) || 1)
               }
               className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter vehicle capacity"
             />
           </div>
 
@@ -73,6 +87,10 @@ const routeColors = [
           >
             {loading ? "Generating..." : "Generate Delivery Plan"}
           </button>
+          <button onClick={resetNodes}
+          className="bg-red-500 mt-2 w-full py-1 text-white rounded hover:bg-red-600 transition duration-200" >
+            Reset
+          </button>
 
           {job && (
             <div className="mt-6 p-4 bg-white rounded shadow text-sm space-y-2">
@@ -81,7 +99,7 @@ const routeColors = [
               </h2>
               <p className="flex justify-between">
                 <span className="font-medium text-gray-600">
-                  Total Distance:
+                  Total Distance ~
                 </span>
                 <span className="font-semibold text-gray-800">
                   {(job.result.totalCost * 111/0.621).toFixed(3)} miles
@@ -93,12 +111,7 @@ const routeColors = [
                   {locations.length - 1}
                 </span>
               </p>
-              <p className="flex justify-between">
-                <span className="font-medium text-gray-600">Generations:</span>
-                <span className="font-semibold text-gray-800">
-                  {job.result.generations}
-                </span>
-              </p>
+              
               <div className="mt-3 space-y-2">
                 <h3 className="font-medium text-gray-700">Routes:</h3>
                 <ul className="space-y-1 text-gray-600">
@@ -128,33 +141,7 @@ const routeColors = [
         </div>
 
         {/* Footer */}
-        <footer className="mt-6 text-center text-xs text-gray-500">
-          <p>© {new Date().getFullYear()} Arnab Chakraborty</p>
-          <div className="flex justify-center space-x-4 mt-2 text-gray-600">
-            <a
-              href="https://github.com/Arnab-iitkgp" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-blue-600"
-            >
-              <FaGithub size={18} />
-            </a>
-            <a
-              href="https://linkedin.com/in/arnab-dev" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-blue-600"
-            >
-              <FaLinkedin size={18} />
-            </a>
-            <a
-              href="mailto:arnabchakraborty7574@gmail.com" 
-              className="hover:text-blue-600"
-            >
-              <FaEnvelope size={18} />
-            </a>
-          </div>
-        </footer>
+        <Footer/>
       </aside>
 
       <main className="flex-1 p-4">

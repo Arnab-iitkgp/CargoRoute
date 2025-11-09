@@ -7,6 +7,7 @@ export async function createJob(payload) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   })
+  console.log(res);
   return res.json()
 }
 
