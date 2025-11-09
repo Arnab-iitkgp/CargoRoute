@@ -154,8 +154,18 @@ function splitIntoTrips(route, demands, vehicleCapacity) {
 }
 
 
+//more realistic and accurate
+function haversineKm([lat1, lon1], [lat2, lon2]) {
+  const R = 6371; // earth radius in km
+  const toRad = x => x * Math.PI / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat/2)**2 +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon/2)**2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
 
-////
 function solveVRP(data) {
   const { locations, demands, vehicleCapacity, numVehicles } = data;
   const numLocations = locations.length;
@@ -164,24 +174,22 @@ function solveVRP(data) {
   const distanceMatrix = Array(numLocations).fill(0).map(() => Array(numLocations).fill(0));
   for (let i = 0; i < numLocations; i++) {
     for (let j = 0; j < numLocations; j++) {
-      const dx = locations[i][0] - locations[j][0];
-      const dy = locations[i][1] - locations[j][1];
-      distanceMatrix[i][j] = Math.sqrt(dx * dx + dy * dy);
+        const base = haversineKm(locations[i], locations[j]);
+        const noise = 1 + (Math.random() * 0.1 - 0.05); // ±5%
+        distanceMatrix[i][j] = base * 1.25*noise;
     }
   }
   console.log("✅ Distance Matrix calculated:", distanceMatrix);
 
-  // Config
-//   const populationSize = 8;
-//   const generations = 100;
-//   const mutationRate = 0.2;
-//   const eliteCount = 5;
-const populationSize = 12; // small relative to 24 tours
-const generations    = 100;
-const mutationRate   = 0.3;
-const eliteCount     = 1;
 
-
+  // const populationSize = 12; //
+  // const generations    = 100;
+  // const mutationRate   = 0.3;
+  // const eliteCount     = 4;
+  const populationSize = 50;
+  const generations    = 300;
+  const mutationRate   = 0.1;
+  const eliteCount     = 5;
 
 
   // Step 2: Initialize Population

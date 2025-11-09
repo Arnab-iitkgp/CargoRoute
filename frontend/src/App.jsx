@@ -29,9 +29,11 @@ const routeColors = [
     };
 
     setLoading(true);
+    console.log("Sending VRP payload:", payload);
     try {
       const result = await createJob(payload);
       setJob(result.job);
+      console.log("VRP Result:", result.job);
     } catch (err) {
       console.error("VRP request failed:", err);
     } finally {
@@ -102,7 +104,7 @@ const routeColors = [
                   Total Distance ~
                 </span>
                 <span className="font-semibold text-gray-800">
-                  {(job.result.totalCost * 111/0.621).toFixed(3)} miles
+                  {(job.result.totalCost).toFixed(3)} Km
                 </span>
               </p>
               <p className="flex justify-between">
