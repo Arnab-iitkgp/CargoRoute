@@ -3,7 +3,7 @@ import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
 const Footer = function () {
   return (
     <div className="mt-6 text-center text-xs text-gray-500">
-      <p>© {new Date().getFullYear()} Arnab Chakraborty</p>
+      <p>© {new Date().getFullYear()} Arnab Chakraborty | <a href="https://arnb.in" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 font-bold transition-colors">arnb.in</a></p>
       <div className="flex justify-center space-x-4 mt-2 text-gray-600">
         <a
           href="https://github.com/Arnab-iitkgp"

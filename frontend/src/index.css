@@ -1,3 +1,84 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .animate-sync-drive {
+    animation: syncDrive 2.5s cubic-bezier(0.5, 0, 0.2, 1) forwards;
+  }
+  .animate-reveal-clip {
+    animation: revealClip 2.5s cubic-bezier(0.5, 0, 0.2, 1) forwards;
+  }
+  .animate-fade-out-splash {
+    animation: fadeOutSplash 0.5s ease-in forwards;
+  }
+  .bg-dot-matrix {
+    background-image: radial-gradient(#94a3b8 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .animate-draw-line-h {
+    animation: drawLineH 1.5s ease-out forwards;
+  }
+  .animate-draw-line-v {
+    animation: drawLineV 1.5s ease-out forwards;
+  }
+
+  /* Brutalist Scrollbar */
+  .brutalist-scrollbar::-webkit-scrollbar {
+    width: 10px;
+  }
+  .brutalist-scrollbar::-webkit-scrollbar-track {
+    background: #f3f4f6; /* gray-100 */
+    border-left: 2px solid #000;
+  }
+  .brutalist-scrollbar::-webkit-scrollbar-thumb {
+    background: #000;
+    border: 2px solid #f3f4f6;
+  }
+  .brutalist-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #333;
+  }
+}
+
+@keyframes syncDrive {
+  0% { left: 0%; opacity: 0; }
+  5% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { left: 120%; opacity: 0; }
+}
+
+@keyframes revealClip {
+  0% { clip-path: inset(-20% 100% -20% 0%); }
+  100% { clip-path: inset(-20% -20% -20% 0%); }
+}
+
+@keyframes fadeOutSplash {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(1.05); }
+}
+
+@keyframes drawLineH {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes drawLineV {
+  from { height: 0; }
+  to { height: 100%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(2deg); }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

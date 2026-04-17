@@ -15,3 +15,16 @@ export async function fetchJob(id) {
   const res = await fetch(`${BASE}/api/jobs/${id}`)
   return res.json()
 }
+
+export async function pingHealth() {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
+  try {
+    const res = await fetch(`${BASE}/health`, { signal: controller.signal });
+    clearTimeout(timeout);
+    return res.ok;
+  } catch {
+    clearTimeout(timeout);
+    return false;
+  }
+}

@@ -24,6 +24,10 @@ app.get("/", (req, res) => {
   res.send("VRP Optimizer Backend is Running");
 });
 
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok", uptime: process.uptime() });
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
